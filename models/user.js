@@ -8,7 +8,9 @@ const userSchema = new Schema({
     password: { type: String, required: true, minLength: 3, maxLength: 20},
     mobile: { type: String},
     email_otp: { type: String},
-    mobile_otp: { type: String},   
+    mobile_otp: { type: String},
+    mobile_verified: {type: Boolean, default: false},
+    expiryDate: {type: Date}
 },
 {
     timestamps: true

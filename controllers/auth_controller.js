@@ -1,4 +1,8 @@
 const User = require('../models/user');
+const FAST2SMS_KEY = "bh45nmQSfGAWiX8Nv6ZJHRkpFD0tE37qTPsVCzMlgY2BIdyex9mSQfCvGbs6U9pEXKiY4Rq0BjzWd2oZ";
+var unirest = require('unirest');
+const querystring = require('querystring');
+const helperFunctions = require('../helper_function');
 
 module.exports.signupController = (req, res)=>{
     return res.render('signup');
@@ -6,7 +10,7 @@ module.exports.signupController = (req, res)=>{
 
 function hasNumber(str){
     let string1 = String(str);
-    for(let i in string1){
+    for(let i in  string1){
         if(!isNaN(string1.charAt(i)) && !(string1.charAt(i)=="")){
             return true;
         }
@@ -78,14 +82,111 @@ module.exports.signin = async function(req, res){
     if(user){
         console.log(user);
         if(user.password === password){
-            return res.redirect('/user/profile');
+            // const query = querystring.stringify({
+            //     ,
+            // });
+            var currentDate = new Date();
+            var expiryDate = currentDate.setHours(currentDate.getHours() + 24);
+            user.expiryDate = expiryDate;
+            await user.save();
+            return res.redirect("/user/profile/"+user.id)
         }else{
             // alert that password doesnot matched
             console.log("password doesnot match");
             return res.redirect('back');
         }
     }else{
+        //alert user that email doesnot exist . plz create
         console.log("email doesnot exist");
         return res.redirect('/auth/signup');
+    }
+}
+
+
+module.exports.verifyMobile = async function(req, res){
+    var id = req.query.user_id;
+    var isExpired = await helperFunctions.isExpired(id);
+    if(helperFunctions.isExpired(id)==true){
+        return res.redirect('/auth/signup')
+    }
+    return res.render('verify_mobile');
+}
+
+
+module.exports.sendOtp = async function(req, res){
+    var mobile = req.body.mobileNumber;
+    console.log(mobile);
+var id = req.body.user_id;
+// var id = req.params.user_id;
+var user = await User.findById(id);
+user.mobile_verified = false;
+var req = unirest("GET", "https://www.fast2sms.com/dev/bulkV2");
+var OTP = Math.floor(Math.random() * 9000 + 1000);
+console.log(OTP);
+req.query({
+  "authorization": FAST2SMS_KEY,
+  "variables_values": OTP,
+  "route": "otp",
+  "numbers": mobile
+});
+req.headers({
+  "cache-control": "no-cache"
+});
+req.end(async function (res) {
+     if (res.error) throw new Error(res.error)
+     console.log(res.body);
+     //save the otp to database for 30 sec and removes it
+     user.mobile_otp = OTP;
+     user.mobile = mobile;
+     await user.save();
+     setTimeout(async function(){
+        var updated_user = await User.findOne({mobile: user.mobile});
+        updated_user.mobile_otp = undefined;
+        if(updated_user.mobile_verified == false){
+            updated_user.mobile = undefined;
+        }
+        await updated_user.save();
+     }, 30 * 1000);
+});
+}
+
+module.exports.verifyOtp = async function(req, res){
+   var OTP = req.body.otp;
+   var id = req.body.user_id;
+    var user = await User.findById(id);
+    if(user.mobile_otp && OTP == user.mobile_otp){
+       user.mobile_verified = true;
+       await user.save();
+        console.log("mobile is verified");
+    }else{
+        user.mobile = undefined;
+        await user.save();
+        return res.redirect('back');
+    }
+}
+
+module.exports.logout = async function(req, res){
+    var id = req.query.user_id;
+    var user = await User.findById(id);
+    if(user){
+        user.expiryDate = undefined;
+        await user.save();
+        return res.redirect("/auth/signin");
+    }else{
+        console.log("error in finding user");
+        return;
+    }
+}
+
+module.exports.sendForgetPasswordEmail = async function(req,res){
+    var email = req.query.email;
+    console.log(email)
+    var user = await User.findOne({email: email});
+    if(user){
+        var emailbody = `<h1>Click on the link to reset password</h1> <a href="http://localhost:3000/auth/reset-password/?user_id=${user.id}>Reset password</a>`
+        await helperFunctions.sendemail(user,emailbody);
+    }else{
+        console.log("Email doesnot exist");
+        return res.redirect('back');
     }
 }
