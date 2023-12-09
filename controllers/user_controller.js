@@ -7,6 +7,6 @@ module.exports.profilePage = (req, res) => {       // This is controller. matlab
 module.exports.sendemail = function(req, res){
 }
 
-module.exports.forgotPassword = function(req, res){
-    return res.render("forgot_password");
+module.exports.forgotPassword = function(req, res) {
+    return res.render('forgot_password');
 }

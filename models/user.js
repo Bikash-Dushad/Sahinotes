@@ -10,7 +10,8 @@ const userSchema = new Schema({
     email_otp: { type: String},
     mobile_otp: { type: String},
     mobile_verified: {type: Boolean, default: false},
-    expiryDate: {type: Date}
+    expiryDate: {type: Date},
+    passwordEditInitiation: {type:Date}
 },
 {
     timestamps: true

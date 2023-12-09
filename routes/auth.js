@@ -16,5 +16,8 @@ router.post('/mobile/verifyotp', authController.verifyOtp);
   
 router.get('/logout', authController.logout);
 
-router.get('/forgot-password ', authController.sendForgetPasswordEmail);
+router.get("/forgot-password", authController.sendForgotPasswordEmail);
+
+router.get("/reset-password", authController.resetPassword);
+router.post("/reset-password", authController.changePassword);
 module.exports = router;
