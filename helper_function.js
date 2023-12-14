@@ -11,29 +11,6 @@ module.exports.isExpired = async function(id){
     }
 }
 
-// module.exports.sendemail = async function(user,content){
-//   console.log(user)
-//     const transporter = nodemailer.createTransport({
-//       host: "smtp.gmail.com",
-//       port: 465,
-//       secure: true,
-//       auth: {
-//         user: "bikashghll@gmail.com",
-//         pass: "bjhl qiig sljl hbya",
-//       },
-//     });
-//     async function main() {
-//       const info = await transporter.sendMail({
-//         from: '"Fred Foo 👻" <bikashghll@gmail.com>', 
-//         to: user.email, 
-//         subject: "Hello ✔", 
-//         text: "Hello world?", 
-//         html: content, 
-//       });
-//       console.log("Message sent: %s", info.messageId);
-//     }
-//     main().catch(console.error);
-//     }
 
 module.exports.sendemail = async function(user, content) {
     const transporter = nodemailer.createTransport({

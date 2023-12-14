@@ -11,6 +11,14 @@
         <h1>This is profile page</h1>
      <a id="verify_mobile_link">verify mobile</a>
      <button id="logout">Logout</button>
+
+     <form action="/notes/upload" method="POST" enctype="multipart/form-data">
+        <input type="text" name="userId" id="userId" hidden>
+        <input type="text" name="name" id="name" placeholder="Enter note name" required>
+        <input type="text" name="about" id="about" placeholder="Explain ur note">
+        <input type="file" accept=".pdf, image/*" name="note" id="note" placeholder="choose a file" required>
+        <input type="submit" value="upload">
+     </form>
     <script src="/js/profile.js"></script>
     </body>
 </html>

@@ -6,6 +6,9 @@ console.log(id);
 window.localStorage.setItem("user_id",id); 
 document.cookie = "user_id"+id;
 
+var userId = document.getElementById("userId");
+userId.value = id;
+
 var logout = document.getElementById("logout");
 logout.addEventListener("click", function(){
     window.localStorage.removeItem("user_id");
