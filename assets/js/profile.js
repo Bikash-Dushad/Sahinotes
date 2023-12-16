@@ -18,3 +18,15 @@ logout.addEventListener("click", function(){
 
 var verify_mobile_link = document.getElementById("verify_mobile_link");
 verify_mobile_link.setAttribute("href", "/auth/verify-mobile/?user_id="+id);
+
+
+fetch('http://localhost:3000/notes/get-all-notes/?user_id='+id,{
+    method: 'GET',
+    // headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    // },
+    // body: data
+ })
+ .then(response => response.json())
+ .then(data => console.log(data))
+ .catch(error => console.error(error));

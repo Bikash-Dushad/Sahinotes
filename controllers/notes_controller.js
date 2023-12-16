@@ -1,5 +1,6 @@
 const Note = require('../models/note');
 const fs = require('fs');
+const User = require('../models/user')
 
 module.exports.uploadNotes = (req, res) => {       // This is controller. matlab jo kam karwana hai
    console.log(req.files);
@@ -19,12 +20,15 @@ module.exports.uploadNotes = (req, res) => {       // This is controller. matlab
                 return res.redirect('back');
             }else{
                 console.log("File saved successfully");
-                await Note.create({
+               var newNote = await Note.create({
                     name:filename,
                     about: req.body.about,
                     fileLocation: fileLocation,
                     author: req.body.userId
                 })
+                var user = await User.findById(req.body.userId);
+                await user.notesList.push(newNote.id)
+                await user.save();
                 return res.redirect('back');
             }
         })
@@ -36,3 +40,8 @@ module.exports.uploadNotes = (req, res) => {       // This is controller. matlab
 }
 }
 
+
+
+module.exports.getAllNotes = function(req, res){    
+    var user_id = req.query.user_id
+}
