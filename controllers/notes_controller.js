@@ -42,6 +42,22 @@ module.exports.uploadNotes = (req, res) => {       // This is controller. matlab
 
 
 
-module.exports.getAllNotes = function(req, res){    
-    var user_id = req.query.user_id
+module.exports.getAllNotes = async function(req, res){    
+   try{
+    var user_id = req.query.user_id;
+    var user = await User.findById(user_id);
+    var allNotes = [];
+    for(var i=0; i<user.notesList.length; i++){
+        var noteReturn = {};
+        var noteId = user.notesList[i];
+        var note = await Note.findById(noteId);
+        noteReturn.name = note.name;
+        noteReturn.about = note.about;
+        noteReturn.fileLocation = note.fileLocation;
+        allNotes.push(note);
+    }
+    return res.status(200).send({success: true, data: allNotes});
+}catch(err){
+    return res.status(500).send({success: false, data: "some error happened"})
+}
 }

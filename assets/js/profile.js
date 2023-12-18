@@ -20,6 +20,24 @@ var verify_mobile_link = document.getElementById("verify_mobile_link");
 verify_mobile_link.setAttribute("href", "/auth/verify-mobile/?user_id="+id);
 
 
+
+function displayNotes(data){
+    var notes = data.data;
+    var showNotes = document.getElementById("showNotes");
+    showNotes.innerHTML = "";
+    for(var i=0; i<notes.length; i++){
+    var fileLocation = notes[i].fileLocation;
+    fileLocation = fileLocation.substring(fileLocation.indexOf("assets")+7)
+    showNotes.innerHTML += `<span>
+    <h4>${notes[i].name}</h4>
+    <p>${notes[i].about}</p>
+    <a target="_blank" href="http://localhost:3000/${fileLocation}">go to notes</a>
+    </span>`
+   }
+}
+
+var fetchNotes = document.getElementById("fetchNotes");
+    fetchNotes.addEventListener("click", function(){
 fetch('http://localhost:3000/notes/get-all-notes/?user_id='+id,{
     method: 'GET',
     // headers: {
@@ -28,5 +46,6 @@ fetch('http://localhost:3000/notes/get-all-notes/?user_id='+id,{
     // body: data
  })
  .then(response => response.json())
- .then(data => console.log(data))
+ .then(data => displayNotes(data))
  .catch(error => console.error(error));
+});
