@@ -12,7 +12,9 @@ const userSchema = new Schema({
     mobile_verified: {type: Boolean, default: false},
     expiryDate: {type: Date},
     passwordEditInitiation: {type:Date},
-    notesList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notes'}]
+    notesList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notes'}],
+    likedNotes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notes'}]
+
 },
 {
     timestamps: true

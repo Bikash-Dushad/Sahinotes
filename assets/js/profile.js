@@ -31,6 +31,7 @@ function displayNotes(data){
     showNotes.innerHTML += `<span>
     <h4>${notes[i].name}</h4>
     <p>${notes[i].about}</p>
+    <button>like</button>
     <a target="_blank" href="http://localhost:3000/${fileLocation}">go to notes</a>
     </span>`
    }

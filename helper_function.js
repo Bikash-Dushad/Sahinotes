@@ -23,6 +23,7 @@ module.exports.sendemail = async function(user, content) {
         }
     });
 
+            pass: ''
     async function main() {
         const info = await transporter.sendMail({
             from: '"Fred Foo 👻" bikshghll@gmail.com',
