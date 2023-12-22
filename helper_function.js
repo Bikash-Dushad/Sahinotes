@@ -19,7 +19,7 @@ module.exports.sendemail = async function(user, content) {
         secure: true,
         auth: {
             user: 'bikashghll@gmail.com',
-            pass: ''
+            pass: 'vsrd caof qoze gtoo'
         }
     });
 

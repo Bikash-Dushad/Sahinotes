@@ -61,3 +61,28 @@ module.exports.getAllNotes = async function(req, res){
     return res.status(500).send({success: false, data: "some error happened"})
 }
 }
+
+module.exports.likeNote = async function(req, res){
+    var userId = req.query.userId;
+    var noteId = req.query.noteId;
+    var user = await User.findById(userId);
+    var note = await Note.findById(noteId);
+
+    if(note.likedUsers.includes(userId)){
+        note.likedUsers.filter(function(x){
+            return x!= userId;
+        });
+        await note.save();
+        user.likedUsers.filter(function(x){
+            return x!= noteId;
+        });
+        await user.save();
+        return res.status(200).send({success: true, data: "Disliked"});
+    }else{
+        note.likedUsers.push(userId);
+        user.likedNotes.push(noteId);
+        await note.save();
+        await user.save();
+        return res.status(200).send({success: true, data: "liked"});
+    }
+}

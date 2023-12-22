@@ -31,10 +31,20 @@ function displayNotes(data){
     showNotes.innerHTML += `<span>
     <h4>${notes[i].name}</h4>
     <p>${notes[i].about}</p>
-    <button>like</button>
+    <button class="like_button" id="${notes[i]._id}">like</button>
     <a target="_blank" href="http://localhost:3000/${fileLocation}">go to notes</a>
     </span>`
    }
+
+   var likeButtons = document.getElementsByClassName("like_button");
+   console.log(likeButtons);
+   for(let i=0; i<likeButtons.length; i++){
+    likeButtons[i].addEventListener("click", function(){
+        var noteId = likeButtons[i].getAttribute("id");
+        console.log(noteId); 
+       })
+   }
+   
 }
 
 var fetchNotes = document.getElementById("fetchNotes");
